@@ -4,7 +4,7 @@ import webbrowser
 arr = []
 
 
-host = 'http://127.111.0.1:8080'
+host = 'https://example.com'
 pref = f'{host}/exec/'
 
 while True:
