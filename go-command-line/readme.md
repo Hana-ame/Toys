@@ -26,3 +26,19 @@ $ENV:HTTP_PROXY=$proxy
 $ENV:HTTPs_PROXY=$proxy
 go get golang.org/x/text       
 ```
+
+
+没问题，string转nil没问题
+``` golang
+package main
+
+import "fmt"
+
+func main() {
+	var b []byte
+	b = nil
+	s := string(b)
+	fmt.Println(s)
+}
+
+```
