@@ -57,7 +57,7 @@ func NewPortal(ptype string) (p *Portal) {
 		p = &Portal{
 			LocalAddr: s,
 			Conn:      c,
-			Timeout:   2,
+			Timeout:   20,
 		}
 		go p.Start()
 	}
@@ -68,17 +68,18 @@ func (p *Portal) Set(paddr *string, laddr *string, mux *Multiplexer) {
 	if paddr != nil {
 		peer, err := net.ResolveUDPAddr(`udp`, *paddr)
 		if err != nil {
-			p.Peer = peer
-		} else {
 			log.Println(err)
+		} else {
+			p.Peer = peer
+
 		}
 	}
 	if laddr != nil {
 		local, err := net.ResolveUDPAddr(`udp`, *laddr)
 		if err != nil {
-			p.Local = local
-		} else {
 			log.Println(err)
+		} else {
+			p.Local = local
 		}
 	}
 	if mux != nil {
