@@ -36,6 +36,9 @@ func (p *PortalPool) Cnt() int {
 	return p.cnt
 }
 func (p *PortalPool) Add(portal *Portal) {
+	if portal == nil {
+		return
+	}
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	if p.cnt >= p.maxlen {
