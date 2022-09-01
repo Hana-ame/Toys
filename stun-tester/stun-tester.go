@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 )
 
 type stunPack struct {
@@ -25,7 +26,7 @@ func (p *stunPack) Bytes() []byte {
 	)
 }
 
-func main() {
+func _main() {
 	Conn, err := net.ListenPacket("udp", fmt.Sprintf("0.0.0.0:%d", 12321))
 	if err != nil {
 		log.Fatal("sb")
@@ -63,6 +64,13 @@ func main() {
 
 // cop111223
 func GetAddr(conn net.PacketConn) (string, error) {
+	flag := true
+	go func() {
+		time.Sleep(time.Second * 5)
+		if flag {
+			conn.Close()
+		}
+	}()
 	addr1, err := GetAddress(conn, "stun1.l.google.com:19302")
 	if err != nil {
 		log.Printf("error : %v", err)
@@ -74,6 +82,7 @@ func GetAddr(conn net.PacketConn) (string, error) {
 		return "", err
 	}
 	if addr1 == addr2 {
+		flag = false
 		return addr1, nil
 	}
 	return "", errors.New("严格的nat类型")
