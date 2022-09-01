@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 func main() {
@@ -12,9 +11,9 @@ func main() {
 		pool.Add(p)
 	}
 	fmt.Println(pool)
-	time.Sleep(time.Second * 5)
+	// time.Sleep(time.Second * 5)
 	fmt.Println(pool)
-	time.Sleep(time.Second * 120)
+	// time.Sleep(time.Second * 120)
 
 	p := pool.Pick()
 	s, err := GetAddr(p.Conn)
@@ -22,6 +21,6 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Println(s)
-
+	fmt.Println(p.Conn.LocalAddr())
 	fmt.Println(pool)
 }
