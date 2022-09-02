@@ -20,5 +20,11 @@ func (s *PortalServer) NewPortal() {
 
 func (s *PortalServer) ActivePortal(paddr *string) {
 	p := s.Pool.Pick()
+	if p == nil {
+		return
+	}
 	p.Set(paddr, s.LocalAddr, nil)
+	if s.Pool.cnt < s.Pool.mlen {
+		go s.NewPortal()
+	}
 }

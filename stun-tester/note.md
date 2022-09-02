@@ -94,6 +94,65 @@ debian的会断开
 https://superuser.com/questions/1008348/netcat-keep-listening-for-connection-in-debian
 
 
+
+```golang
+func main() {
+	ps := NewPortalServer("localhost:9999")
+	ps.NewPortal()
+	ps.NewPortal()
+	ps.NewPortal()
+	ps.NewPortal()
+
+	var paddr string
+
+	paddr = "localhost:10000"
+	ps.ActivePortal(&paddr)
+	paddr = "localhost:10001"
+	ps.ActivePortal(&paddr)
+
+	time.Sleep(time.Second * 90)
+}
+```
 PortalServer没啥问题
 
 
+
+
+```golang 
+// stun-tester.go
+
+func _main() {
+	Conn, err := net.ListenPacket("udp", fmt.Sprintf("0.0.0.0:%d", 12321))
+	if err != nil {
+		log.Fatal("sb")
+		return
+	}
+	// fmt.Println(GetAddr(Conn))
+
+	// addr, err := net.ResolveUDPAddr("udp", "34.145.70.165:12421")
+	// if err != nil {
+	// 	log.Printf("error : %v", err)
+	// 	return
+	// }
+	// fmt.Println("1")
+	// time.Sleep(time.Second * 3)
+	// Conn.WriteTo([]byte{0}, addr)
+	// Conn.WriteTo([]byte{0}, addr)
+	// Conn.WriteTo([]byte{0}, addr)
+	// Conn.WriteTo([]byte{0}, addr)
+	// Conn.WriteTo([]byte{0}, addr)
+	// fmt.Println("2")
+
+	// buffer := make([]byte, 2048)
+	// for {
+	// 	fmt.Println(3)
+	// 	n, addr, err := Conn.ReadFrom(buffer)
+	// 	if err != nil {
+	// 		log.Fatal(err.Error())
+	// 	}
+	// 	fmt.Printf("packet-received: bytes=%d from=%s\n", n, addr.String())
+	// 	// portalproxy.PrintHex(buffer[:n])
+	// }
+	s, _ := GetAddr(Conn)
+	fmt.Println(s)
+}

@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 	ps := NewPortalServer("localhost:9999")
@@ -8,6 +11,8 @@ func main() {
 	ps.NewPortal()
 	ps.NewPortal()
 	ps.NewPortal()
+
+	fmt.Println(ps.Pool)
 
 	var paddr string
 

@@ -17,14 +17,6 @@ const (
 	MTU = 2048
 )
 
-type Multiplexer struct {
-	Conn *net.UDPConn // 占用的port
-}
-
-func (m *Multiplexer) Remove(i interface{}) {
-
-}
-
 type Portal struct {
 	LocalAddr string
 	Conn      *net.UDPConn // 占用的port
@@ -53,13 +45,14 @@ func NewPortal(ptype string) (p *Portal) {
 		s, err := GetAddr(c)
 		if err != nil {
 			log.Println(err)
+			return nil
 		}
 		fmt.Println(s)
 
 		p = &Portal{
 			LocalAddr: s,
 			Conn:      c,
-			Timeout:   20,
+			Timeout:   30,
 		}
 		go p.Start()
 	}
@@ -73,7 +66,6 @@ func (p *Portal) Set(paddr *string, laddr *string, mux *Multiplexer) {
 			log.Println(err)
 		} else {
 			p.Peer = peer
-
 		}
 	}
 	if laddr != nil {
