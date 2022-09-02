@@ -78,7 +78,7 @@ func Client(listenAddr string) {
 
 	go func(host string, path string, data string) { // not tested, should be work. connect between
 		for !stopFlag {
-			res := PostAddr(host, path, data, 30)
+			res := PostAddr(host, path, data, 10)
 			if res != nil && len(res) == 2 {
 				for _, s := range res {
 					udpaddr, err := net.ResolveUDPAddr("udp", s)
@@ -158,7 +158,7 @@ func Server(forwardAddr string) {
 	}
 	go func(host string, path string, data string) { // not tested, should be work. connect between
 		for !stopFlag {
-			res := PostAddr(host, path, data, 30)
+			res := PostAddr(host, path, data, 10)
 			if res != nil {
 				for _, s := range res {
 					udpaddr, err := net.ResolveUDPAddr("udp", s)

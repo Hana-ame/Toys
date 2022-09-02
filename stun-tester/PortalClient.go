@@ -48,12 +48,13 @@ func NewMultiplexer(ptype string, addr *string) *Multiplexer {
 }
 
 func (m *Multiplexer) Start() {
+	fmt.Println("well, did you worked?")
 	for {
 		buffer := make([]byte, MTU)
-		l, addr, err := (*m.Conn).ReadFrom(buffer)
+		l, addr, err := m.Conn.ReadFrom(buffer)
 		if err != nil {
 			log.Println(err.Error())
-			return
+			continue
 		}
 		// m.addrfrom = &addr
 		log.Println(`[Mux]receive from `, addr, `len=`, l)
@@ -86,7 +87,7 @@ func (m *Multiplexer) handlePacket(l int, b []byte, addr *net.Addr) {
 	p := m.m[addrString]
 	m.mu.RUnlock()
 
-	fmt.Println(p)
+	fmt.Println(p) // 不在
 
 	p.RecvPacketFromOthers(l, b)
 }
