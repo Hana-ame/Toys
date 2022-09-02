@@ -21,8 +21,8 @@ func (s *PortalServer) NewPortal() {
 // paddr: address from peer,
 // laddr: default(nil) is s.LocalAddr
 // mux  : never used
-func (s *PortalServer) ActivePortal(paddr *string, laddr *string, mux *Multiplexer) {
-	p := s.Pool.Pick()
+func (s *PortalServer) ActivePortal(paddr *string, laddr *string, mux *Multiplexer) (p *Portal) {
+	p = s.Pool.Pick()
 	if p == nil {
 		return
 	}
@@ -36,4 +36,5 @@ func (s *PortalServer) ActivePortal(paddr *string, laddr *string, mux *Multiplex
 	if s.Pool.cnt < s.Pool.mlen {
 		go s.NewPortal()
 	}
+	return
 }

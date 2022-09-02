@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"sync"
@@ -16,6 +17,8 @@ type Multiplexer struct {
 	Pool *PortalPool
 	m    map[string]*Portal
 	mu   sync.RWMutex
+
+	RecvConnCallBack func()
 }
 
 func NewMultiplexer(ptype string, addr *string) *Multiplexer {
@@ -76,12 +79,14 @@ func (m *Multiplexer) handlePacket(l int, b []byte, addr *net.Addr) {
 		m.m[addrString] = p
 		m.mu.Unlock()
 
+		go m.RecvConnCallBack() // would it work?
+
 		m.mu.RLock()
 	} // m.mp[addrString] != nil
 	p := m.m[addrString]
 	m.mu.RUnlock()
 
-	// fmt.Println(p)
+	fmt.Println(p)
 
 	p.RecvPacketFromOthers(l, b)
 }
@@ -114,19 +119,23 @@ func (c *PortalClient) NewPortal() {
 	c.Pool.Add(p)
 }
 
+// not used!
 // paddr: address from peer,
 // laddr: always nil
 // mux  : always c.Mux
-func (c *PortalClient) ActivePortal(paddr *string, laddr *string, mux *Multiplexer) {
-	p := c.Pool.Pick()
+func (c *PortalClient) ActivePortal(paddr *string, laddr *string, mux *Multiplexer) (p *Portal) {
+	p = c.Pool.Pick()
 	if p == nil {
 		return
 	}
 	p.Set(paddr, nil, mux)
 	if mux != nil {
 		c.Mux.Pool.Add(p)
+	} else {
+		log.Println("This should never occure")
 	}
 	if c.Pool.cnt < c.Pool.mlen {
 		go c.NewPortal()
 	}
+	return
 }
