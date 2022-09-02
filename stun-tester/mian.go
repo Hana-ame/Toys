@@ -1,44 +1,20 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "time"
 
 func main() {
-	pool := NewPortalPool(5, 5)
-	for i := 0; i < 5; i++ {
-		p := NewPortal("udp")
-		pool.Add(p)
-	}
-	fmt.Println(pool)
-	// time.Sleep(time.Second * 5)
-	fmt.Println(pool)
-	// time.Sleep(time.Second * 120)
+	ps := NewPortalServer("localhost:9999")
+	ps.NewPortal()
+	ps.NewPortal()
+	ps.NewPortal()
+	ps.NewPortal()
 
-	p := pool.Pick()
-	s, err := GetAddr(p.Conn)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(s)
-	fmt.Println(p.Conn.LocalAddr())
-	fmt.Println(pool)
+	var paddr string
 
-	for i := 0; i < 4; i++ {
-		p := pool.Pick()
-		var paddr *string
-		laddr := "localhost:9999"
-		if i == 0 {
-			addr := "localhost:10000"
-			paddr = &addr
-		}
-		if i == 2 {
-			addr := "localhost:10001"
-			paddr = &addr
-		}
-		p.Set(paddr, &laddr, nil)
-	}
+	paddr = "localhost:10000"
+	ps.ActivePortal(&paddr)
+	paddr = "localhost:10001"
+	ps.ActivePortal(&paddr)
 
-	time.Sleep(time.Second * 60)
+	time.Sleep(time.Second * 90)
 }

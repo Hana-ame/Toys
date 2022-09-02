@@ -43,8 +43,10 @@ type Portal struct {
 }
 
 func NewPortal(ptype string) (p *Portal) {
-	c, _ := net.ListenUDP(ptype, nil)
-
+	c, err := net.ListenUDP(ptype, nil)
+	if err != nil {
+		log.Println(err)
+	}
 	if ptype == `udp6` {
 		return nil
 	} else {

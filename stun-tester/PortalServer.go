@@ -14,7 +14,7 @@ func NewPortalServer(addr string) *PortalServer {
 }
 
 func (s *PortalServer) NewPortal() {
-	p := NewPortal("udp6 not supported")
+	p := NewPortal("udp")
 	s.Pool.Add(p)
 }
 
