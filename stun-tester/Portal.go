@@ -23,15 +23,12 @@ type Portal struct {
 	Peer      *net.UDPAddr // 远端地址
 	Local     *net.UDPAddr // server端：server；client端口：nil
 	// for mux
-	AddrFromMux *net.Addr // AddrFrom is the default
-	Mux         *Multiplexer
+	Mux *Multiplexer
 	// timestamp
 	timeStampLastPack int64
 	Timeout           int64
 	//
 	status int
-
-	SendLocal func(p *Portal) []byte
 }
 
 func NewPortal(ptype string) (p *Portal) {
@@ -96,7 +93,7 @@ func (p *Portal) Start() {
 
 	go func() { // heart beat with peer
 		for p.status != DYING {
-			if p.status == PEERSET {
+			if p.status == PEERSET || p.status == PEERHANDSHAKE {
 				p.Conn.WriteTo([]byte{}, p.Peer) // send empty packet
 			}
 			// another task
@@ -118,42 +115,45 @@ func (p *Portal) Start() {
 		}
 		// fmt.Println(addr.String())
 		// fmt.Println(p.Peer.String())
-		if p.status == PEERSET {
+		if p.status == PEERSET || p.status == PEERHANDSHAKE {
 			p.timeStampLastPack = time.Now().Unix() // renew the timestamp when last pkt received
 			p.status = PEERHANDSHAKE
 		}
 		if l == 0 {
 			continue
 		}
+		p.timeStampLastPack = time.Now().Unix() // renew the timestamp when last pkt received
 		if p.status == PEERHANDSHAKE {
 			p.status = PEERRECV
 		}
 
-		fmt.Println(`recv from `, addr, ` l=`, l)
+		// fmt.Println(`recv from `, addr, ` l=`, l)
 		if addr.String() == (*p.Peer).String() { // if the pkt is from peer
 			p.RecvPacketFromPeer(l, buffer)
 		} else { // the pkt is from others (not peer)
 			p.RecvPacketFromOthers(l, buffer)
 		}
-
 	}
 }
 
 // client receive: forward to mux, mux send to local port
 // server receive: forward to server:port (*p.local)
 func (p *Portal) RecvPacketFromPeer(l int, buf []byte) {
-	if p.Local != nil { // if have Local then send to Local
-		p.Conn.WriteTo(buf[:l], p.Local)
-	} else if p.Mux != nil { // else send to Mux to handle it
-		p.Mux.Conn.WriteTo(buf[:l], p.Local) //
-	} // drop when all empty
+	if p.Local != nil {
+		if p.Mux != nil { // else send to Mux to handle it
+			p.Mux.Conn.WriteTo(buf[:l], p.Local) //
+		} else { // if have Local then send to Local
+			p.Conn.WriteTo(buf[:l], p.Local)
+		}
+	}
+	// drop when all empty
 }
 
 // client receive: forward to peer (*p.peer) directly use this function (but which is not import)
 // server receive: forward to peer (*p.peer) it's from server:port (but which is not import)
 func (p *Portal) RecvPacketFromOthers(l int, buf []byte) {
 	if p.Peer != nil { // don't ask, just send to peer
-		p.Conn.WriteTo(buf, p.Peer)
+		p.Conn.WriteTo(buf[:l], p.Peer)
 	}
 } // done
 

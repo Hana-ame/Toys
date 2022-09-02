@@ -18,12 +18,21 @@ func (s *PortalServer) NewPortal() {
 	s.Pool.Add(p)
 }
 
-func (s *PortalServer) ActivePortal(paddr *string) {
+// paddr: address from peer,
+// laddr: default(nil) is s.LocalAddr
+// mux  : never used
+func (s *PortalServer) ActivePortal(paddr *string, laddr *string, mux *Multiplexer) {
 	p := s.Pool.Pick()
 	if p == nil {
 		return
 	}
-	p.Set(paddr, s.LocalAddr, nil)
+	if laddr == nil {
+		laddr = s.LocalAddr
+	}
+	p.Set(paddr, laddr, nil)
+	// if mux != nil {
+	// 	s.Pool.Add(p)
+	// }
 	if s.Pool.cnt < s.Pool.mlen {
 		go s.NewPortal()
 	}

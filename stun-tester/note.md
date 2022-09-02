@@ -112,6 +112,25 @@ func main() {
 
 	time.Sleep(time.Second * 90)
 }
+
+func main() {
+	ps := NewPortalServer("localhost:9999")
+	ps.NewPortal()
+	ps.NewPortal()
+	ps.NewPortal()
+	ps.NewPortal()
+
+	fmt.Println(ps.Pool)
+
+	var paddr string
+
+	paddr = "localhost:10000"
+	ps.ActivePortal(&paddr,ps.LocalAddr,nil)
+	paddr = "localhost:10001"
+	ps.ActivePortal(&paddr,ps.LocalAddr,nil)
+
+	time.Sleep(time.Second * 90)
+}
 ```
 PortalServer没啥问题
 
@@ -156,3 +175,117 @@ func _main() {
 	s, _ := GetAddr(Conn)
 	fmt.Println(s)
 }
+```
+
+```golang 
+func __1_main() {
+	p1 := &Portal{}
+	p2 := &Portal{}
+	p3 := &Portal{}
+	fmt.Println([]*Portal{p1, p2, p3})
+
+	pool := NewPortalPool(1, 1)
+	fmt.Println(pool)
+
+	pool.Add(p1)
+	fmt.Println(pool)
+	pool.Add(p2)
+	fmt.Println(pool)
+	pool.Add(p3)
+	fmt.Println(pool)
+
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+
+	pool.Add(p1)
+	fmt.Println(pool)
+	pool.Add(p2)
+	fmt.Println(pool)
+	pool.Add(p3)
+	fmt.Println(pool)
+
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+
+	pool.Add(p1)
+	fmt.Println(pool)
+	fmt.Println(pool.Pick())
+	fmt.Println(pool)
+
+}
+
+```
+
+
+
+```golang
+func main() {
+	pc := NewPortalClient("localhost:10000")
+	pc.NewPortal()
+	pc.NewPortal()
+	pc.NewPortal()
+	pc.NewPortal()
+
+	fmt.Println(pc.Pool)
+
+	var paddr string = ""
+
+	paddr = "localhost:9999"
+	pc.ActivePortal(&paddr, nil, pc.Mux)
+	pc.ActivePortal(&paddr, nil, pc.Mux)
+	pc.ActivePortal(&paddr, nil, pc.Mux)
+	pc.ActivePortal(&paddr, nil, pc.Mux)
+
+	// p := pc.Mux.Pool.m[0]
+	// go func() {
+	// 	for {
+	// 		fmt.Println(p)
+	// 		time.Sleep(time.Second * 5)
+	// 	}
+	// }()
+	for {
+		fmt.Println(pc.Pool)
+		fmt.Println(pc.Mux)
+		fmt.Println(pc.Mux.Pool)
+		time.Sleep(time.Second * 2)
+		fmt.Println("==============")
+	}
+
+	time.Sleep(time.Second * 30)
+	fmt.Println("==============")
+
+	fmt.Println(pc.Pool)
+	fmt.Println(pc.Mux)
+	fmt.Println(pc.Mux.Pool)
+
+	fmt.Println("==============")
+	time.Sleep(time.Second * 60)
+	fmt.Println("==============")
+
+	fmt.Println(pc.Pool)
+	fmt.Println(pc.Mux)
+	fmt.Println(pc.Mux.Pool)
+
+	fmt.Println("==============")
+	time.Sleep(time.Second * 90)
+}
+
+
+```
+
+PortalClient大概没什么问题。

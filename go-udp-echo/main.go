@@ -11,7 +11,7 @@ func main() {
 	buf := make([]byte, 2048)
 	for {
 		l, addr, err := lc.ReadFrom(buf)
-		// log.Println(l, addr)
+		log.Println(l, addr)
 		if err != nil {
 			log.Println(err.Error())
 			continue

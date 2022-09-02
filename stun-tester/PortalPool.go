@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -68,55 +67,4 @@ func (p *PortalPool) Pick() (portal *Portal) {
 		p.cnt--
 	}
 	return
-}
-
-func __1_main() {
-	p1 := &Portal{}
-	p2 := &Portal{}
-	p3 := &Portal{}
-	fmt.Println([]*Portal{p1, p2, p3})
-
-	pool := NewPortalPool(1, 1)
-	fmt.Println(pool)
-
-	pool.Add(p1)
-	fmt.Println(pool)
-	pool.Add(p2)
-	fmt.Println(pool)
-	pool.Add(p3)
-	fmt.Println(pool)
-
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-
-	pool.Add(p1)
-	fmt.Println(pool)
-	pool.Add(p2)
-	fmt.Println(pool)
-	pool.Add(p3)
-	fmt.Println(pool)
-
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-
-	pool.Add(p1)
-	fmt.Println(pool)
-	fmt.Println(pool.Pick())
-	fmt.Println(pool)
-
 }
