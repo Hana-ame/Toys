@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"sync"
+	"time"
 )
 
 const (
@@ -54,6 +55,8 @@ func (m *Multiplexer) Start() {
 		l, addr, err := m.Conn.ReadFrom(buffer)
 		if err != nil {
 			log.Println(err.Error())
+			log.Println(err.Error())
+			log.Println(err.Error())
 			continue
 		}
 		// m.addrfrom = &addr
@@ -71,9 +74,18 @@ func (m *Multiplexer) handlePacket(l int, b []byte, addr *net.Addr) {
 		m.mu.RUnlock()
 
 		p := m.Pool.Pick() // pick a unused portal to handle packets from this address
+		// go func() {
+		// 	if m.Pool.Cnt() < m.Pool.mlen {
+		// 		p := NewPortal("udp")
+		// 		c.Pool.Add(p)
+		// 	}
+		// }()
 		for p == nil || p.status == DYING {
+			fmt.Println("peer ")
+			time.Sleep(time.Second)
 			p = m.Pool.Pick() // pick a unused portal to handle packets from this address
 		}
+		fmt.Println(addrString)
 		p.Set(nil, &addrString, nil)
 
 		m.mu.Lock()
@@ -87,7 +99,7 @@ func (m *Multiplexer) handlePacket(l int, b []byte, addr *net.Addr) {
 	p := m.m[addrString]
 	m.mu.RUnlock()
 
-	fmt.Println(p) // 不在
+	// fmt.Println(p) // 不在
 
 	p.RecvPacketFromOthers(l, b)
 }

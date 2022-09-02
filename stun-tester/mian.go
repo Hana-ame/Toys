@@ -12,56 +12,64 @@ import (
 var c *net.UDPConn
 var peerAddr *net.UDPAddr
 
-var getPool *PortalPool
-var putPool *PortalPool
+// var getPool *PortalPool
+// var putPool *PortalPool
+var pc *PortalClient
 
 var m map[string]*Portal
 var mu sync.Mutex
 
 func main() {
-	// addr := "localhost:9999"
-	// Server(addr)
+	var addr string
 
-	addr := ":10000"
-	Client(addr)
+	addr = "localhost:9999"
+	// go Server(addr)
+
+	addr = ":10000"
+	go Client(addr)
+
+	time.Sleep(time.Hour)
 }
 
 func ActiveClientPortal() {
+	if pc.Pool.Cnt() < pc.Pool.mlen {
+		go pc.NewPortal()
+	}
 	if peerAddr == nil {
 		return
 	}
-
-	p := getPool.Pick()
+	p := pc.Pool.Pick()
 	if p == nil {
 		return
 	}
 
-	fmt.Println("ActiveClientPortal", p, getPool, putPool, peerAddr, c)
+	// fmt.Println("ActiveClientPortal", p, pc.Pool, pc.Mux.Pool, peerAddr, c)
 
 	c.WriteToUDP([]byte(p.LocalAddr), peerAddr)
 	mu.Lock()
 	m[p.LocalAddr] = p
 	mu.Unlock()
 
-	fmt.Println("ActiveClientPortal", p, getPool, putPool)
+	fmt.Println("ActiveClientPortal", p, pc.Pool, pc.Mux.Pool)
 
 	// for i := putPool.mlen - putPool.Cnt(); i > 0; i-- {
 	// 	ActiveClientPortal()
 	// }
-	if putPool.mlen > putPool.Cnt() {
+	if pc.Mux.Pool.mlen > pc.Mux.Pool.Cnt() {
 		go ActiveClientPortal()
 	}
 }
 
 func Client(listenAddr string) {
 	stopFlag := false
-	pc := NewPortalClient(listenAddr)
+	pc = NewPortalClient(listenAddr)
 	for i := 0; i < 5; i++ {
 		go pc.NewPortal()
 	}
+
 	go debug(pc)
-	getPool = pc.Pool
-	putPool = pc.Mux.Pool
+	// getPool = pc.Pool
+	// putPool = pc.Mux.Pool
 	pc.Mux.RecvConnCallBack = ActiveClientPortal
 
 	var err error
@@ -185,12 +193,21 @@ func Server(forwardAddr string) {
 			continue
 		}
 		msg := string(buf[:l])
+
+		// fmt.Println(msg)
+
 		_, err = net.ResolveUDPAddr("udp", msg)
 		if err != nil {
 			log.Println(err)
 			continue
 		}
 		p := ps.ActivePortal(&msg, ps.LocalAddr, nil)
+		if p == nil {
+			log.Println(msg, "no portal avaliable")
+			continue
+		}
+		// fmt.Println(ps.Pool)
+		// fmt.Println(p)
 
 		res := msg + "\n" + p.LocalAddr
 		c.WriteToUDP([]byte(res), raddr)
@@ -201,9 +218,10 @@ func Server(forwardAddr string) {
 
 func debug(pc *PortalClient) {
 	for {
-		time.Sleep(time.Second * 2)
+		time.Sleep(time.Second * 10)
 		fmt.Println(pc.Mux.Pool)
 		fmt.Println(pc.Pool)
+		fmt.Println(pc.Mux.m)
 		fmt.Println("===============")
 	}
 }

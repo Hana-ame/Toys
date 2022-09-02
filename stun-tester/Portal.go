@@ -49,7 +49,7 @@ func NewPortal(ptype string) (p *Portal) {
 		p = &Portal{
 			LocalAddr: s,
 			Conn:      c,
-			Timeout:   30,
+			Timeout:   10,
 		}
 		go p.Start()
 	}
