@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+    <title>学习爱我</title> 
+    <meta name="viewport" content="width=divice-width, initial-scale=1.0"><meta>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+    <script src="https://markdown-it.github.io/markdown-it.js"></script>
+    <script src="markdown-it-container.js"></script>
+    <link rel="stylesheet" type="text/css" href="app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css">
+    <link rel="stylesheet" href="https://markdown-it.github.io/index.css">
+</head>
+<body>
+    <main id="b2main" v-on="{mousedown: mouseDown, mouseup: mouseUp, mousemove: mouseMove}" >
+        <!-- <div id="box" class="box" :style="{ position: 'fixed', left: translatePos.x+'px', top: translatePos.y+'px', transform: 'scale('+ transCoe +')'}"> -->
+        <div id="box" class="box" :style="{ position: 'fixed', transform: 'scale('+ transCoe +')' + 'translate('+ translatePos.x+'px,' + translatePos.y+'px)'}">
+            {{text}}123
+        </div>
+        <div class="bubble">
+            <div class="bubble-meta">
+                <div class="bubble-icon">图图</div>
+                <div class="bubble-title">标题</div>
+                <span class="bubble-author">21721659</span>
+                <span class="bubble-timestamp">10-10 10:10</span>
+            </div>
+            
+            <div class="bubble-content" v-html="contentRendered"></div>
+        </div>
+        <div style="position: fixed; right: 0px; bottom: 0px;">
+            {{mousePos}}
+            <br>
+            窗口大小：({{height}},{{width}})
+            <br>
+            globalPos世界坐标系:{{globalPos}}
+            <br>
+            referPos世界坐标原点在网页的坐标（弃用）:{{referPos}}
+            <br>
+            translate:{{translatePos}}
+            <br>
+            transCoe:{{transCoe}}
+            <br>
+            counter:
+            {{counter}}
+        </div>
+
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+
+    </main>
+    
+    <script src="app.js"></script>
+</body>
+</html>
