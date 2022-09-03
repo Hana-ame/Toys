@@ -37,7 +37,7 @@ func main() {
 	isServer := flag.Bool("s", false, "work as server when specified")
 
 	flag.Parse()
-	fmt.Println(addr, host, path)
+	fmt.Println(addr, host, path, *isServer)
 
 	if *isServer {
 		Server(addr)
@@ -79,7 +79,7 @@ func ActiveClientPortal() {
 	// }
 	// time.Sleep(time.Second)
 	if pc.Mux.Pool.mlen-1 > pc.Mux.Pool.Cnt() {
-		ActiveClientPortal()
+		go ActiveClientPortal()
 	}
 }
 
@@ -110,6 +110,7 @@ func Client(listenAddr string) {
 	go func(host string, path string, data string) { // not tested, should be work. connect between
 		for !stopFlag {
 			res := PostAddr(host, path, data, 10)
+			fmt.Println("!!!!!!", res)
 			if res != nil && len(res) == 2 {
 				// fmt.Println("!!!!!!", res)
 				for _, s := range res {
@@ -123,6 +124,7 @@ func Client(listenAddr string) {
 					}
 					if s != data {
 						peerAddr = udpaddr
+						log.Println("peerAddr : ", peerAddr)
 					}
 				}
 				time.Sleep(time.Second * 3)
@@ -137,10 +139,20 @@ func Client(listenAddr string) {
 	ActiveClientPortal()
 	ActiveClientPortal()
 	ActiveClientPortal()
+
+	fmt.Println("===============")
+	fmt.Println(pc.Mux.Pool)
+	fmt.Println(pc.Pool)
+	fmt.Println(pc.Mux.m)
+	fmt.Println("===============")
+
 	ActiveClientPortal()
 	ActiveClientPortal()
 
 	buf := make([]byte, 2048)
+	log.Println("before recv first pack")
+	l, raddr, err := c.ReadFromUDP(buf)
+	log.Println("recv first pack", raddr, "len = ", l)
 	for {
 		// fmt.Println("recv")
 		l, raddr, err := c.ReadFromUDP(buf)
@@ -217,6 +229,7 @@ func Server(forwardAddr string) {
 	// loop
 	// handle the recv message
 	buf := make([]byte, 2048)
+	log.Println("before recv first pack")
 	l, raddr, err := c.ReadFromUDP(buf)
 	log.Println("recv first pack", raddr, "len = ", l)
 	if err != nil {
