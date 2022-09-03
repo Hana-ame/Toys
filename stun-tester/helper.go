@@ -48,5 +48,7 @@ func PostAddr(host string, path string, data string, timeout int64) []string {
 			res = append(res, k)
 		}
 	}
+	fmt.Println("=======")
+
 	return res
 }
