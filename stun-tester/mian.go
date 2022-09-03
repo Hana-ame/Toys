@@ -89,8 +89,9 @@ func Client(listenAddr string) {
 	for i := 0; i < 5; i++ {
 		go pc.NewPortal()
 	}
+	pc.NewPortal()
 
-	// go debug(pc)
+	go debug(pc)
 	// getPool = pc.Pool
 	// putPool = pc.Mux.Pool
 	pc.Mux.RecvConnCallBack = ActiveClientPortal
@@ -136,6 +137,12 @@ func Client(listenAddr string) {
 	for peerAddr == nil {
 		time.Sleep(time.Second)
 	}
+
+	buf := make([]byte, 2048)
+	log.Println("before recv first pack")
+	l, raddr, err := c.ReadFromUDP(buf)
+	log.Println("recv first pack", raddr, "len = ", l)
+
 	ActiveClientPortal()
 	ActiveClientPortal()
 	ActiveClientPortal()
@@ -149,10 +156,6 @@ func Client(listenAddr string) {
 	ActiveClientPortal()
 	ActiveClientPortal()
 
-	buf := make([]byte, 2048)
-	log.Println("before recv first pack")
-	l, raddr, err := c.ReadFromUDP(buf)
-	log.Println("recv first pack", raddr, "len = ", l)
 	for {
 		// fmt.Println("recv")
 		l, raddr, err := c.ReadFromUDP(buf)

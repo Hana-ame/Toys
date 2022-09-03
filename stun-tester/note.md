@@ -325,3 +325,27 @@ PortalClient大概没什么问题。
 
 google cloudshell不通。
 
+
+
+gcp
+```bash
+python3 -m http.server 80
+
+#~/Toys/stun-tester
+$ git pull origin
+#~/Toys/stun-tester
+$ go build -o ./release/udptun .
+
+#~/Toys/stun-tester
+$ ./release/udptun  -s --a=localhost:9999 --p=test
+
+
+cd ~/Toys/stun-tester
+./release/udptun  -s --a=localhost:9999 --p=test
+
+#:~
+$ cd ./Toys/stun-tester/release/
+#~/Toys/stun-tester/release
+$ ./hysteria-linux-amd64 server
+
+```

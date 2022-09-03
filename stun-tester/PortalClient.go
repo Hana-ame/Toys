@@ -82,6 +82,7 @@ func (m *Multiplexer) handlePacket(l int, b []byte, addr *net.Addr) {
 		// }()
 		for p == nil || p.status == DYING {
 			fmt.Println("peer ")
+			fmt.Println(m.Pool)
 			time.Sleep(time.Second)
 			p = m.Pool.Pick() // pick a unused portal to handle packets from this address
 		}
@@ -141,6 +142,9 @@ func (c *PortalClient) NewPortal() {
 // mux  : always c.Mux
 func (c *PortalClient) ActivePortal(paddr *string, laddr *string, mux *Multiplexer) (p *Portal) {
 	p = c.Pool.Pick()
+	if c.Pool.Cnt() < c.Pool.mlen {
+		c.NewPortal()
+	}
 	if p == nil {
 		return
 	}
