@@ -35,6 +35,10 @@ func main() {
 	flag.StringVar(&path, "p", "test", "path, should be specified")
 
 	isServer := flag.Bool("s", false, "work as server when specified")
+
+	flag.Parse()
+	fmt.Println(addr, host, path)
+
 	if *isServer {
 		Server(addr)
 	} else {

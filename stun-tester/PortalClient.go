@@ -60,7 +60,7 @@ func (m *Multiplexer) Start() {
 			continue
 		}
 		// m.addrfrom = &addr
-		log.Println(`[Mux]receive from `, addr, `len=`, l)
+		// log.Println(`[Mux]receive from `, addr, `len=`, l)
 		// _ = l
 		m.handlePacket(l, buffer, &addr)
 	}

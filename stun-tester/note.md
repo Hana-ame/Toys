@@ -303,12 +303,21 @@ PortalClient大概没什么问题。
 突然不对了，回个档看看
 
 
-===============
-&{[0xc000400eb0 0xc000318230 0xc000401180 0xc00021a3c0 0xc000335450] 3 3 5 5 10 {0 0}}
-&{[0xc000335680 0xc00005c0f0 0xc00005c320 0xc0004001e0 0xc00021a1e0 0xc00021a140 0xc000400000 0xc00039cd20 0xc0003341e0 <nil>] 0 9 9 10 10 {0 0}}
-map[127.0.0.1:56138:0xc00019b810]
-===============
-&{[0xc000400eb0 0xc000318230 0xc000401180 0xc000335680 0xc000335450] 4 4 5 5 10 {0 0}}
-&{[0xc00021a550 0xc00005c0f0 0xc00005c320 0xc0004001e0 0xc00021a1e0 0xc00021a140 0xc000400000 0xc00039cd20 0xc0003341e0 0xc000435680] 1 1 10 10 10 {0 0}}
-map[127.0.0.1:56138:0xc00021a3c0]
-===============
+```bash 
+
+# server
+./udptun.exe -s --a=localhost:9999 --p=test 
+
+# client
+./udptun.exe --p=test --a=:10000
+./udptun.exe --p=test 
+
+```
+
+
+```cmd
+
+.\hysteria-windows-amd64.exe 
+.\hysteria-windows-amd64.exe -c server.json -s
+
+```
