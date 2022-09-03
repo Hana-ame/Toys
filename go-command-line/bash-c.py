@@ -3,9 +3,10 @@ import webbrowser
 
 arr = []
 
+host = 'http://127.111.0.1:8080'
+with open("host.secret.txt", 'r') as f:
+    host = f.read()
 
-host = 'https://moonchan.xyz'
-# host = 'http://127.111.0.1:8080'
 pref = f'{host}/exec/'
 
 while True:
