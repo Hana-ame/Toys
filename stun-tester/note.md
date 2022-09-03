@@ -318,6 +318,10 @@ PortalClient大概没什么问题。
 ```cmd
 
 .\hysteria-windows-amd64.exe 
-.\hysteria-windows-amd64.exe -c server.json -s
+.\hysteria-windows-amd64.exe -c server.json server
 
 ```
+
+
+google cloudshell不通。
+

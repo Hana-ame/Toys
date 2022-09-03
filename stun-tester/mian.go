@@ -217,6 +217,11 @@ func Server(forwardAddr string) {
 	// loop
 	// handle the recv message
 	buf := make([]byte, 2048)
+	l, raddr, err := c.ReadFromUDP(buf)
+	log.Println("recv first pack", raddr, "len = ", l)
+	if err != nil {
+		log.Println(err)
+	}
 	for {
 		l, raddr, err := c.ReadFromUDP(buf)
 		if err != nil {
