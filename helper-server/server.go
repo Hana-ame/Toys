@@ -54,6 +54,11 @@ func main() {
 			server_post(w, r)
 		}
 	})
+	http.HandleFunc("/clear", func(w http.ResponseWriter, r *http.Request) {
+		mutex.Lock()
+		site = Site{} // 为啥之前没事
+		mutex.Unlock()
+	})
 
 	log.Fatal(http.ListenAndServe("127.0.233.0:8080", nil))
 }

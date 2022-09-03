@@ -41,6 +41,7 @@ func (p *PortalPool) Add(portal *Portal) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	if p.cnt >= p.maxlen {
+		// p.m[p.wptr].Stop() // rptr == wptr
 		p.m[p.wptr] = portal
 		p.rptr = (p.rptr + 1) % p.mlen
 		p.wptr = (p.wptr + 1) % p.mlen

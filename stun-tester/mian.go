@@ -44,19 +44,21 @@ func ActiveClientPortal() {
 	}
 
 	// fmt.Println("ActiveClientPortal", p, pc.Pool, pc.Mux.Pool, peerAddr, c)
-
+	// fmt.Println("****** ActiveClientPortal *******", "\n", peerAddr, "\n", p.LocalAddr, "\n", "******")
+	// fmt.Println(m)
 	c.WriteToUDP([]byte(p.LocalAddr), peerAddr)
 	mu.Lock()
 	m[p.LocalAddr] = p
 	mu.Unlock()
 
-	fmt.Println("ActiveClientPortal", p, pc.Pool, pc.Mux.Pool)
+	// fmt.Println("****** ActiveClientPortal *******", "\n", p, "\n", pc.Pool, "\n", pc.Mux.Pool, "\n", "******")
 
 	// for i := putPool.mlen - putPool.Cnt(); i > 0; i-- {
 	// 	ActiveClientPortal()
 	// }
+	time.Sleep(time.Second)
 	if pc.Mux.Pool.mlen > pc.Mux.Pool.Cnt() {
-		go ActiveClientPortal()
+		ActiveClientPortal()
 	}
 }
 
@@ -83,17 +85,21 @@ func Client(listenAddr string) {
 		log.Println(err)
 		return
 	}
-
+	fmt.Println("!!!!!!!", localAddr)
 	go func(host string, path string, data string) { // not tested, should be work. connect between
 		for !stopFlag {
 			res := PostAddr(host, path, data, 10)
 			if res != nil && len(res) == 2 {
+				fmt.Println("!!!!!!", res)
 				for _, s := range res {
 					udpaddr, err := net.ResolveUDPAddr("udp", s)
 					if err != nil {
 						log.Println(err)
 					}
-					c.WriteToUDP([]byte{}, udpaddr)
+					_, err = c.WriteToUDP([]byte{}, udpaddr)
+					if err != nil {
+						log.Println(err)
+					}
 					if s != data {
 						peerAddr = udpaddr
 					}
@@ -111,6 +117,7 @@ func Client(listenAddr string) {
 
 	buf := make([]byte, 2048)
 	for {
+		fmt.Println("recv")
 		l, raddr, err := c.ReadFromUDP(buf)
 		if err != nil {
 			log.Println(err)
@@ -120,6 +127,7 @@ func Client(listenAddr string) {
 			continue
 		}
 		msg := string(buf[:l])
+		fmt.Println("==== msg: ====", "\n", msg, "\n", "====")
 		msgs := strings.Split(msg, "\n")
 		_, err = net.ResolveUDPAddr("udp", msgs[1])
 		if err != nil {
@@ -164,6 +172,7 @@ func Server(forwardAddr string) {
 		log.Println(err)
 		return
 	}
+	fmt.Println("!!!!!!!", localAddr)
 	go func(host string, path string, data string) { // not tested, should be work. connect between
 		for !stopFlag {
 			res := PostAddr(host, path, data, 10)
@@ -194,7 +203,9 @@ func Server(forwardAddr string) {
 		}
 		msg := string(buf[:l])
 
-		// fmt.Println(msg)
+		fmt.Println("=== msg ===")
+		fmt.Println(msg)
+		fmt.Println("===")
 
 		_, err = net.ResolveUDPAddr("udp", msg)
 		if err != nil {
@@ -210,6 +221,10 @@ func Server(forwardAddr string) {
 		// fmt.Println(p)
 
 		res := msg + "\n" + p.LocalAddr
+		fmt.Println("=== res ===")
+		fmt.Println(res)
+		fmt.Println(raddr)
+		fmt.Println("===")
 		c.WriteToUDP([]byte(res), raddr)
 		c.WriteToUDP([]byte(res), raddr)
 		c.WriteToUDP([]byte(res), raddr)
@@ -219,6 +234,7 @@ func Server(forwardAddr string) {
 func debug(pc *PortalClient) {
 	for {
 		time.Sleep(time.Second * 10)
+		fmt.Println("===============")
 		fmt.Println(pc.Mux.Pool)
 		fmt.Println(pc.Pool)
 		fmt.Println(pc.Mux.m)

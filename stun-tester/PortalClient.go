@@ -130,6 +130,9 @@ func NewPortalClient(addr string) *PortalClient {
 func (c *PortalClient) NewPortal() {
 	p := NewPortal("udp")
 	c.Pool.Add(p)
+	if c.Pool.Cnt() < c.Pool.mlen {
+		c.NewPortal()
+	}
 }
 
 // not used!

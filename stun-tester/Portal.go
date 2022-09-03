@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"time"
@@ -44,7 +43,7 @@ func NewPortal(ptype string) (p *Portal) {
 			log.Println(err)
 			return nil
 		}
-		fmt.Println(s)
+		// fmt.Println(s)
 
 		p = &Portal{
 			LocalAddr: s,
