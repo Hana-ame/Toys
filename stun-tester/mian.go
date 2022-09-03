@@ -56,10 +56,10 @@ func ActiveClientPortal() {
 	// for i := putPool.mlen - putPool.Cnt(); i > 0; i-- {
 	// 	ActiveClientPortal()
 	// }
-	time.Sleep(time.Second)
-	if pc.Mux.Pool.mlen > pc.Mux.Pool.Cnt() {
-		ActiveClientPortal()
-	}
+	// time.Sleep(time.Second)
+	// if pc.Mux.Pool.mlen > pc.Mux.Pool.Cnt() {
+	// 	ActiveClientPortal()
+	// }
 }
 
 func Client(listenAddr string) {
@@ -90,7 +90,7 @@ func Client(listenAddr string) {
 		for !stopFlag {
 			res := PostAddr(host, path, data, 10)
 			if res != nil && len(res) == 2 {
-				fmt.Println("!!!!!!", res)
+				// fmt.Println("!!!!!!", res)
 				for _, s := range res {
 					udpaddr, err := net.ResolveUDPAddr("udp", s)
 					if err != nil {
@@ -114,10 +114,14 @@ func Client(listenAddr string) {
 		time.Sleep(time.Second)
 	}
 	ActiveClientPortal()
+	ActiveClientPortal()
+	ActiveClientPortal()
+	ActiveClientPortal()
+	ActiveClientPortal()
 
 	buf := make([]byte, 2048)
 	for {
-		fmt.Println("recv")
+		// fmt.Println("recv")
 		l, raddr, err := c.ReadFromUDP(buf)
 		if err != nil {
 			log.Println(err)
