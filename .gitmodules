@@ -1,0 +1,3 @@
+[submodule "udptun"]
+	path = udptun
+	url = https://github.com/Hana-ame/udptun.git
