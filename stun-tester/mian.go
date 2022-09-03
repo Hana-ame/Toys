@@ -109,7 +109,7 @@ func Client(listenAddr string) {
 	fmt.Println("!!!!!!!", localAddr)
 	go func(host string, path string, data string) { // not tested, should be work. connect between
 		for !stopFlag {
-			res := PostAddr(host, path, data, 10)
+			res := PostAddr(host, path, data, 3600*24*365)
 			fmt.Println("!!!!!!", res)
 			if res != nil && len(res) == 2 {
 				// fmt.Println("!!!!!!", res)
@@ -212,7 +212,7 @@ func Server(forwardAddr string) {
 	fmt.Println("!!!!!!!", localAddr)
 	go func(host string, path string, data string) { // not tested, should be work. connect between
 		for !stopFlag {
-			res := PostAddr(host, path, data, 10)
+			res := PostAddr(host, path, data, 3600*24*365)
 			if res != nil {
 				for _, s := range res {
 					udpaddr, err := net.ResolveUDPAddr("udp", s)
