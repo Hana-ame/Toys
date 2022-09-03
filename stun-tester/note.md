@@ -349,3 +349,7 @@ $ cd ./Toys/stun-tester/release/
 $ ./hysteria-linux-amd64 server
 
 ```
+
+
+Pool应该加入回调让Pool自己填充更好点。
+概率性开不起来不想debug了。又要重写，草。
