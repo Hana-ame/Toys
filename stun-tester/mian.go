@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -19,16 +20,32 @@ var pc *PortalClient
 var m map[string]*Portal
 var mu sync.Mutex
 
+var addr string
+var host string
+var path string
+
 func main() {
-	var addr string
 
 	addr = "localhost:9999"
+	host = "http://127.0.233.0:8080"
+	path = "test"
+
+	flag.StringVar(&addr, "a", ":10000", "address, udp")
+	flag.StringVar(&host, "h", "https://moonchan.xyz/233", "help server host, no /")
+	flag.StringVar(&path, "p", "test", "path, should be specified")
+
+	isServer := flag.Bool("s", false, "work as server when specified")
+	if *isServer {
+		Server(addr)
+	} else {
+		Client(addr)
+	}
 	// go Server(addr)
 
-	addr = ":10000"
-	go Client(addr)
+	// addr = ":10000"
+	// go Client(addr)
 
-	time.Sleep(time.Hour)
+	// time.Sleep(time.Hour)
 }
 
 func ActiveClientPortal() {
@@ -57,9 +74,9 @@ func ActiveClientPortal() {
 	// 	ActiveClientPortal()
 	// }
 	// time.Sleep(time.Second)
-	// if pc.Mux.Pool.mlen > pc.Mux.Pool.Cnt() {
-	// 	ActiveClientPortal()
-	// }
+	if pc.Mux.Pool.mlen-1 > pc.Mux.Pool.Cnt() {
+		ActiveClientPortal()
+	}
 }
 
 func Client(listenAddr string) {
@@ -69,7 +86,7 @@ func Client(listenAddr string) {
 		go pc.NewPortal()
 	}
 
-	go debug(pc)
+	// go debug(pc)
 	// getPool = pc.Pool
 	// putPool = pc.Mux.Pool
 	pc.Mux.RecvConnCallBack = ActiveClientPortal
@@ -107,7 +124,7 @@ func Client(listenAddr string) {
 				time.Sleep(time.Second * 3)
 			}
 		}
-	}("http://127.0.233.0:8080", "test", localAddr)
+	}(host, path, localAddr)
 
 	m = make(map[string]*Portal)
 	for peerAddr == nil {
@@ -191,7 +208,7 @@ func Server(forwardAddr string) {
 				time.Sleep(time.Second * 3)
 			}
 		}
-	}("http://127.0.233.0:8080", "test", localAddr)
+	}(host, path, localAddr)
 
 	// loop
 	// handle the recv message
