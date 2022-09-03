@@ -74,13 +74,11 @@ func (m *Multiplexer) handlePacket(l int, b []byte, addr *net.Addr) {
 		m.mu.RUnlock()
 
 		p := m.Pool.Pick() // pick a unused portal to handle packets from this address
-		// go func() {
-		// 	if m.Pool.Cnt() < m.Pool.mlen {
-		// 		p := NewPortal("udp")
-		// 		c.Pool.Add(p)
-		// 	}
-		// }()
+
+		go m.RecvConnCallBack() // would it work?
+
 		for p == nil || p.status == DYING {
+			go m.RecvConnCallBack() // would it work?
 			fmt.Println("peer ")
 			fmt.Println(m.Pool)
 			time.Sleep(time.Second)
@@ -92,8 +90,6 @@ func (m *Multiplexer) handlePacket(l int, b []byte, addr *net.Addr) {
 		m.mu.Lock()
 		m.m[addrString] = p
 		m.mu.Unlock()
-
-		go m.RecvConnCallBack() // would it work?
 
 		m.mu.RLock()
 	} // m.mp[addrString] != nil
