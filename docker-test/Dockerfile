@@ -1,5 +1,5 @@
 FROM scratch
-COPY hello /
+COPY bin/hello /
 
 # EXPOSE 80
 # CMD

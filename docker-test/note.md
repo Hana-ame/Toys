@@ -54,4 +54,31 @@ docker run docker-test
 - 创建Dockerfile
   - 其中语法再看
 - `docker build . -t [REPOSITORY]` 创建镜像
-- `docker run [REPOSITORY]` 运行镜像
+- `docker run [REPOSITORY]` 运行镜像 
+
+参见：
+- https://www.dockercn.net/?id=172
+- https://www.youtube.com/watch?v=SnSH8Ht3MIc
+
+docker内部怎么连外面网啊？
+host模式？
+
+curl 命令转golang
+https://mholt.github.io/curl-to-go/
+
+普通的运行能够访问网络。
+
+```ps1
+docker images  # 查看
+$env:CGO_ENABLED=0 
+$env:GOOS='linux'  
+$env:GOARCH='amd64'
+go build -o ./bin/hello hello.go  
+
+docker build . -t docker-test
+docker run docker-test       
+```
+
+记得开启docker desktop
+
+`ENTRYPOINT ["/hello"]`是啥。
